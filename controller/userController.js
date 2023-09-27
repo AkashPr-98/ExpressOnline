@@ -16,8 +16,17 @@ const addUser = async (req, res) => {
         const data = await userData.save()
         res.status(201).send({ msg: "Data inserted successfully", data })
     } catch (err) {
-        console.log(err);
+        res.status(400).send({err});
     }
 }
 
-module.exports = { addUser }
+const findUsers = async(req, res) => {
+    try{
+        const data = await userModel.find({}, {first_name:1, last_name:1, age:1, _id:0})
+        res.status(200).send({data})
+    }catch(err){
+        res.status(500).send({err})
+    }
+}
+
+module.exports = { addUser, findUsers }
