@@ -29,4 +29,31 @@ const findUsers = async(req, res) => {
     }
 }
 
-module.exports = { addUser, findUsers }
+async function userByCity(req, res){
+    try{
+        const actualData = await userModel.find({city:req.body.city})
+        if(actualData.length > 0){
+            res.status(200).send({data:actualData})
+        }else{
+            res.status(400).send({message:"The city you chose doesn't have any data"})
+        }
+    }catch(err){
+        res.status(500).send({err})
+    }
+}
+
+async function login(req, res){
+    try{
+        const {email, password} = req.body
+        const data = await userModel.findOne({email, password}, {email:0, password:0})
+        if(data !== null){
+            res.status(200).send({actualData:data})
+        }else{
+            res.status(400).send({message:"This user doesn't exist"})
+        }
+    }catch(err){
+        res.status(500).send({err})
+    }
+}
+
+module.exports = { addUser, findUsers, userByCity, login }

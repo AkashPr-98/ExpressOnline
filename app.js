@@ -17,7 +17,7 @@ app.get('/', (req, res) => {
 })
 
 const userRoute = require('./router/userRoute')
-app.use('/abc', userRoute)
+app.use('/user', userRoute)
 
 app.listen(8000, () => {
     console.log("Server is running")
