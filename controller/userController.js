@@ -56,4 +56,38 @@ async function login(req, res){
     }
 }
 
-module.exports = { addUser, findUsers, userByCity, login }
+async function updateUser(req, res){
+
+    const {first_name} = req.params
+    const {age, city} = req.body
+
+    try{
+        const data = await userModel.updateOne({first_name}, {$set:{age, city}})
+        if(data.modifiedCount > 0){
+            res.status(200).send({msg:"User updated successfully"})
+        }else{
+            res.status(400).send({msg:"Nothing has been updated"})
+        }
+        
+    }catch(err){
+        console.log(err)
+    }
+}
+
+async function deleteUser(req, res){
+
+    const {first_name} = req.params
+
+    try{
+        const data = await userModel.deleteOne({first_name})
+        if(data.deletedCount > 0){
+            res.status(200).send({message:"Document deleted successfully"})
+        }else{
+            res.status(400).send({msg:"The document you are trying to delete doesn't exist"})
+        }
+    }catch(err){
+        console.log(err)
+    }
+}
+
+module.exports = { addUser, findUsers, userByCity, login, updateUser, deleteUser }
