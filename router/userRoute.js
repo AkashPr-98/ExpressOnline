@@ -10,8 +10,10 @@ router.post('/findByCity', userController.userByCity)
 
 router.post('/login', userController.login)
 
-router.put('/update/:first_name', userController.updateUser)
+router.put('/update/:id', userController.updateUser)
 
-router.delete('/dluser/:first_name', userController.deleteUser)
+router.get('/finduser/:id', userController.findUserById)
+
+router.delete('/dluser/:id', userController.deleteUser)
 
 module.exports = router
