@@ -29,6 +29,11 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         default: "Nashik"
+    },
+
+    photo: {
+        type: String,
+        required: true
     }
 })
 

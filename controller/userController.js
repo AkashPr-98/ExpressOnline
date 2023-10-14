@@ -15,7 +15,8 @@ const addUser = async (req, res) => {
             age,
             email,
             password: encryptedpassword,
-            city
+            city,
+            photo: req.file.filename
         })
         const data = await userData.save()
         res.status(201).send({ msg: "Data inserted successfully", data })

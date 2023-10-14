@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const express = require('express')
 const app = express()
 const cors = require('cors')
+const path = require('path')
 
 mongoose.connect('mongodb://127.0.0.1:27017/ExpressDemoDB')
 .then(() => {
@@ -14,6 +15,13 @@ mongoose.connect('mongodb://127.0.0.1:27017/ExpressDemoDB')
 app.use(express.json())
 
 app.use(cors())
+
+console.log("__filename", __filename);
+console.log("__dirname", __dirname);
+
+console.log(path.join(__dirname, 'public'));
+
+app.use(express.static(path.join(__dirname, 'public')))
 
 app.get('/', (req, res) => {
     res.send("Server is up and running")
