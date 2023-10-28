@@ -8,8 +8,6 @@ const addUser = async (req, res) => {
     const salt = bcrypt.genSaltSync(10)
     const encryptedpassword = bcrypt.hashSync(password, salt)
 
-    console.log(req.file);
-
     try {
         const userData = new userModel({
             first_name,
