@@ -1,9 +1,9 @@
 const userController = require('../controller/userController')
 const express = require('express')
 const router = express()
-const upload = require('../utils/fileUpload')
 
-router.post('/register', upload.single('photo') ,userController.addUser)
+
+router.post('/register',userController.addUser)
 
 router.get('/allUsers', userController.findUsers)
 

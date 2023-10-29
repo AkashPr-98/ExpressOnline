@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs')
 
 const addUser = async (req, res) => {
 
-    const { first_name, last_name, age, email, city, password } = req.body
+    const { first_name, last_name, age, email, city, password, photo } = req.body
 
     const salt = bcrypt.genSaltSync(10)
     const encryptedpassword = bcrypt.hashSync(password, salt)
@@ -16,7 +16,7 @@ const addUser = async (req, res) => {
             email,
             password: encryptedpassword,
             city,
-            photo: req.file.filename
+            photo
         })
         const data = await userData.save()
         res.status(201).send({ msg: "Data inserted successfully", data })
