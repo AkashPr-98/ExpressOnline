@@ -33,6 +33,9 @@ app.use('/user', userRoute)
 const productRouter = require('./router/productRoute')
 app.use('/product', productRouter)
 
+const infoRouter = require('./router/infoRoute')
+app.use('/info', infoRouter)
+
 app.listen(8000, () => {
     console.log("Server is running")
 })
