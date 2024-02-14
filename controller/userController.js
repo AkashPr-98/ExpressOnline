@@ -1,5 +1,33 @@
 const userModel = require("../model/userModel")
 const bcrypt = require('bcryptjs')
+const passport = require('passport')
+const LocalStrategy = require('passport-local').Strategy
+
+passport.use(new LocalStrategy({
+    usernameField: 'email',
+    passwordField: 'password'
+}, async (email, password, done) => {
+    const user = await userModel.findOne({ email })
+
+    if (!user) {
+        return done(null, false, { message: "User not found with this email" })
+    }
+
+    if (!bcrypt.compareSync(password, user.password)) {
+        return done(null, false, { message: "Invalid credentials" })
+    }
+
+    return done(null, user)
+}))
+
+passport.serializeUser((user, done) => {
+    return done(null, user.id)
+})
+
+passport.deserializeUser(async (id, done) => {
+    const user = await userModel.findOne({ _id: id })
+    return done(null, user)
+})
 
 const addUser = async (req, res) => {
 
@@ -46,21 +74,42 @@ async function userByCity(req, res) {
     }
 }
 
-async function login(req, res) {
+function login(req, res) {
     try {
-        const { email, password } = req.body
-        const data = await userModel.findOne({ email })
-        const comparePassword = await bcrypt.compare(password, data.password)
-        console.log("comparePassword", comparePassword);
-        console.log("data", data);
-        if (comparePassword) {
-            res.status(200).send({ actualData: data })
-        } else {
-            res.status(400).send({ message: "The password is not correct" })
-        }
 
+        const sessionDetails = {
+            sessionID: req.sessionID,
+            user: req.user
+        }
+        res.status(200).send({ sessionDetails })
     } catch (err) {
         res.status(500).send({ err })
+    }
+}
+
+function logout(req, res) {
+    try {
+        req.logout(function (err) {
+            if (err) {
+                return res.status(400).send({ message: "Error Logging out" })
+            } else {
+                res.status(200).send({ message: "User logged out successfully" })
+            }
+        })
+    } catch (err) {
+        res.status(500).send(err)
+    }
+}
+
+async function findUser(req, res) {
+    try {
+        if (req.isAuthenticated()) {
+            res.status(200).send(req.user)
+        } else {
+            res.status(400).send({ message: "Please login first" })
+        }
+    } catch (err) {
+        res.status(500).send(err)
     }
 }
 
@@ -70,7 +119,11 @@ async function findUserById(req, res) {
         const { id } = req.params
 
         const data = await userModel.findOne({ _id: id })
+        if (data) {
             res.status(200).send(data)
+        } else {
+            res.status(400).send({ message: "No such user exists" })
+        }
     } catch (err) {
         res.status(500).send(err)
     }
@@ -110,4 +163,14 @@ async function deleteUser(req, res) {
     }
 }
 
-module.exports = { addUser, findUsers, userByCity, login, updateUser, deleteUser, findUserById }
+module.exports = {
+    addUser,
+    findUsers,
+    userByCity,
+    login,
+    updateUser,
+    deleteUser,
+    findUserById,
+    logout,
+    findUser
+}
