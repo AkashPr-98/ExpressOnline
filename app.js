@@ -29,13 +29,10 @@ app.use(session({
 app.use(passport.initialize())
 app.use(passport.session())
 
-app.use(cors(
-    {
-      origin: 'http://localhost:3000',
-      credentials: true,
-      optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-    }
-  ));
+app.use(cors({
+    origin: "http://localhost:3000",
+    credentials: true
+}));
 
 app.get('/', (req, res) => {
     res.send("Server is up and running")
