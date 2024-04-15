@@ -2,11 +2,8 @@ const mongoose = require('mongoose')
 const express = require('express')
 const app = express()
 const cors = require('cors')
-const session = require('express-session')
-const passport = require('passport')
-const LocalStrategy = require('passport-local').Strategy
 
-mongoose.connect('mongodb://127.0.0.1:27017/ExpressDemoDB')
+mongoose.connect('mongodb://127.0.0.1:27017/Nodemailer')
     .then(() => {
         console.log("Successfully connected to database")
     })
@@ -15,19 +12,6 @@ mongoose.connect('mongodb://127.0.0.1:27017/ExpressDemoDB')
     })
 
 app.use(express.json())
-
-app.use(session({
-    secret: 'abcd',
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        secure: false,
-        httpOnly: false,
-    }
-}))
-
-app.use(passport.initialize())
-app.use(passport.session())
 
 app.use(cors({
     origin: "http://localhost:3000",
@@ -43,6 +27,7 @@ app.use('/user', userRoute)
 
 const productRouter = require('./router/productRoute')
 app.use('/product', productRouter)
+
 
 app.listen(8000, () => {
     console.log("Server is running")
